@@ -23,176 +23,196 @@
             </div>
         @endif
 
-        <!-- =======================
-        HEADER (Judul & Search)
-        ======================== -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
-                Katalog Buku
-            </h1>
+        <!-- ============================================= -->
+        <!-- FORM UNTUK SEMUA FILTER (Search + Sidebar) -->
+        <!-- ============================================= -->
+        <form action="{{ route('peminjaman') }}" method="GET" id="filterForm">
             
-            <!-- Search Bar -->
-            <div class="w-full md:w-1/3">
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg>
-                    </span>
-                    <input type="text" placeholder="Cari judul, penulis, atau ISBN..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perpustakaan-blue focus:border-transparent">
+            <!-- HEADER (Judul & Search) -->
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
+                    Katalog Buku
+                </h1>
+                
+                <!-- Search Bar -->
+                <div class="w-full md:w-1/3">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
+                        </span>
+                        <!-- Input 'search' -->
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul, penulis, atau ISBN..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perpustakaan-blue focus:border-transparent">
+                        <button type="submit" class="hidden">Cari</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- =======================
-        LAYOUT UTAMA (Filter & Grid Buku)
-        ======================== -->
-        <div class="flex flex-col md:flex-row gap-8">
+            <!-- LAYOUT UTAMA (Filter & Grid Buku) -->
+            <div class="flex flex-col md:flex-row gap-8">
 
-            <!-- KOLOM 1: FILTER (Sidebar) -->
-            <aside class="w-full md:w-1/4 lg:w-1/5">
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Filter Buku</h3>
+                <!-- KOLOM 1: FILTER (Sidebar) -->
+                <aside class="w-full md:w-1/4 lg:w-1/5">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Filter Buku</h3>
 
-                    <!-- Filter Kategori (Dinamis) -->
-                    <div class="mb-5">
-                        <h4 class="font-semibold text-gray-700 mb-2">Kategori</h4>
-                        <div class="space-y-1.5">
-                            <!-- Tombol Radio 'Semua' -->
-                            <div class="flex items-center">
-                                <input id="filter-kat-semua" name="kategori" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue" checked>
-                                <label for="filter-kat-semua" class="ml-2 block text-sm text-gray-700">Semua Kategori</label>
-                            </div>
-                            <!-- Loop Kategori dari Database -->
-                            @foreach($kategoris as $kategori)
-                            <div class="flex items-center">
-                                <input id="filter-kat-{{ $kategori->id }}" name="kategori" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue">
-                                <label for="filter-kat-{{ $kategori->id }}" class="ml-2 block text-sm text-gray-700">{{ $kategori->nama_kategori }}</label>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    
-                    <!-- Filter Ketersediaan (Statis) -->
-                    <div class="mb-5">
-                        <h4 class="font-semibold text-gray-700 mb-2">Ketersediaan</h4>
-                        <div class="space-y-1.5">
-                            <div class="flex items-center">
-                                <input id="filter-semua" name="ketersediaan" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue" checked>
-                                <label for="filter-semua" class="ml-2 block text-sm text-gray-700">Semua</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="filter-tersedia" name="ketersediaan" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue">
-                                <label for="filter-tersedia" class="ml-2 block text-sm text-gray-700">Tersedia</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="filter-dipinjam" name="ketersediaan" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue">
-                                <label for="filter-dipinjam" class="ml-2 block text-sm text-gray-700">Dipinjam</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filter Tahun Terbit (Statis) -->
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-2">Tahun Terbit</h4>
-                        <div class="space-y-1.5">
-                            <div class="flex items-center">
-                                <input id="filter-2020" name="tahun" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue">
-                                <label for="filter-2020" class="ml-2 block text-sm text-gray-700">2020-2024</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="filter-2015" name="tahun" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue">
-                                <label for="filter-2015" class="ml-2 block text-sm text-gray-700">2015-2019</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="filter-2010" name="tahun" type="radio" class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue">
-                                <label for="filter-2010" class="ml-2 block text-sm text-gray-700">2010-2014</label>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </aside>
-
-            <!-- KOLOM 2: GRID BUKU (Dinamis) -->
-            <main class="w-full md:w-3/4 lg:w-4/5">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
-                    <!-- Loop data buku dari controller -->
-                    @forelse ($bukus as $buku)
-                    <!-- Tombol Kartu Buku (Memicu Modal) -->
-                    <button data-id="{{ $buku->id }}" class="block group openModalBtn text-left cursor-pointer">
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col group-hover:shadow-lg transition-shadow duration-300 h-full">
-                            
-                            <!-- Gambar Sampul -->
-                            <div class="aspect-[3/4] overflow-hidden">
-                                @if($buku->cover_thumbnail_url)
-                                    <!-- Gunakan Storage::url() untuk mendapatkan path publik -->
-                                    <img src="{{ Storage::url($buku->cover_thumbnail_url) }}" alt="{{ $buku->nama_buku }}" class="w-full h-full object-cover">
-                                @else
-                                    <!-- Fallback jika tidak ada cover -->
-                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                        <img src="https://placehold.co/300x400/e2e8f0/cccccc?text=No+Cover" alt="No Cover" class="w-full h-full object-cover">
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <!-- Detail Teks -->
-                            <div class="p-4 flex flex-col flex-grow">
-                                <h3 class="text-lg font-bold text-gray-800 mb-1 truncate" title="{{ $buku->nama_buku }}">{{ $buku->nama_buku }}</h3>
-                                <p class="text-sm text-gray-600 mb-2 truncate" title="{{ $buku->nama_penulis }}">{{ $buku->nama_penulis }}</p>
-                                
-                                <!-- Rating -->
-                                <div class="flex items-center mb-3">
-                                    <!-- Logic untuk menampilkan bintang -->
-                                    @php 
-                                        // Bulatkan rating ke integer terdekat
-                                        $rating = round($buku->rating_buku ?? 0); 
-                                    @endphp
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $rating)
-                                            <!-- Bintang Terisi -->
-                                            <svg class="w-4 h-4 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.772 1.415-.772 1.736 0l1.83 4.401 4.853.704c.806.117 1.13.916.547 1.481l-3.51 3.42.83 4.83c.135.798-.703 1.403-1.416 1.004L10 15.17l-4.325 2.274c-.713.398-1.55-.206-1.416-1.004l.83-4.83-3.51-3.42c-.583-.565-.259-1.364.547-1.481l4.853-.704L9.132 2.884Z" clip-rule="evenodd" /></svg>
-                                        @else
-                                            <!-- Bintang Kosong -->
-                                            <svg class="w-4 h-4 text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.772 1.415-.772 1.736 0l1.83 4.401 4.853.704c.806.117 1.13.916.547 1.481l-3.51 3.42.83 4.83c.135.798-.703 1.403-1.416 1.004L10 15.17l-4.325 2.274c-.713.398-1.55-.206-1.416-1.004l.83-4.83-3.51-3.42c-.583-.565-.259-1.364.547-1.481l4.853-.704L9.132 2.884Z" clip-rule="evenodd" /></svg>
-                                        @endif
-                                    @endfor
-                                    <span class="text-xs text-gray-500 ml-1.5">({{ $buku->rating_buku ?? 'N/A' }})</span>
+                        <!-- Filter Kategori (Dinamis) -->
+                        <div class="mb-5">
+                            <h4 class="font-semibold text-gray-700 mb-2">Kategori</h4>
+                            <div class="space-y-1.5">
+                                <div class="flex items-center">
+                                    <input id="filter-kat-semua" name="kategori" value="semua" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue"
+                                           onchange="this.form.submit()"
+                                           {{ request('kategori', 'semua') == 'semua' ? 'checked' : '' }}>
+                                    <label for="filter-kat-semua" class="ml-2 block text-sm text-gray-700">Semua Kategori</label>
                                 </div>
+                                @foreach($kategoris as $kategori)
+                                <div class="flex items-center">
+                                    <input id="filter-kat-{{ $kategori->id }}" name="kategori" value="{{ $kategori->id }}" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue"
+                                           onchange="this.form.submit()"
+                                           {{ request('kategori') == $kategori->id ? 'checked' : '' }}>
+                                    <label for="filter-kat-{{ $kategori->id }}" class="ml-2 block text-sm text-gray-700">{{ $kategori->nama_kategori }}</label>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        
+                        <!-- Filter Ketersediaan (Statis) -->
+                        <div class="mb-5">
+                            <h4 class="font-semibold text-gray-700 mb-2">Ketersediaan</h4>
+                            <div class="space-y-1.5">
+                                <div class="flex items-center">
+                                    <input id="filter-semua" name="ketersediaan" value="semua" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue" 
+                                           onchange="this.form.submit()"
+                                           {{ request('ketersediaan', 'semua') == 'semua' ? 'checked' : '' }}>
+                                    <label for="filter-semua" class="ml-2 block text-sm text-gray-700">Semua</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="filter-tersedia" name="ketersediaan" value="tersedia" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue" 
+                                           onchange="this.form.submit()"
+                                           {{ request('ketersediaan') == 'tersedia' ? 'checked' : '' }}>
+                                    <label for="filter-tersedia" class="ml-2 block text-sm text-gray-700">Tersedia</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="filter-dipinjam" name="ketersediaan" value="dipinjam" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue"
+                                           onchange="this.form.submit()"
+                                           {{ request('ketersediaan') == 'dipinjam' ? 'checked' : '' }}>
+                                    <label for="filter-dipinjam" class="ml-2 block text-sm text-gray-700">Dipinjam</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- (REVISI BARU) Filter Tahun Terbit -->
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-2">Tahun Terbit</h4>
+                            <div class="space-y-1.5">
+                                <div class="flex items-center">
+                                    <input id="filter-tahun-semua" name="tahun" value="semua" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue" 
+                                           onchange="this.form.submit()"
+                                           {{ request('tahun', 'semua') == 'semua' ? 'checked' : '' }}>
+                                    <label for="filter-tahun-semua" class="ml-2 block text-sm text-gray-700">Semua Tahun</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="filter-2021" name="tahun" value="2021-2025" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue"
+                                           onchange="this.form.submit()"
+                                           {{ request('tahun') == '2021-2025' ? 'checked' : '' }}>
+                                    <label for="filter-2021" class="ml-2 block text-sm text-gray-700">2021-2025</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="filter-2011" name="tahun" value="2011-2020" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue"
+                                           onchange="this.form.submit()"
+                                           {{ request('tahun') == '2011-2020' ? 'checked' : '' }}>
+                                    <label for="filter-2011" class="ml-2 block text-sm text-gray-700">2011-2020</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="filter-2000" name="tahun" value="2000-2010" type="radio" 
+                                           class="h-4 w-4 text-perpustakaan-blue border-gray-300 focus:ring-perpustakaan-blue"
+                                           onchange="this.form.submit()"
+                                           {{ request('tahun') == '2000-2010' ? 'checked' : '' }}>
+                                    <label for="filter-2000" class="ml-2 block text-sm text-gray-700">2000-2010</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </aside>
+
+                <!-- KOLOM 2: GRID BUKU (Dinamis) -->
+                <main class="w-full md:w-3/4 lg:w-4/5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                        <!-- Loop data buku dari controller -->
+                        @forelse ($bukus as $buku)
+                        <!-- Tombol Kartu Buku (Memicu Modal) -->
+                        <button type="button" data-id="{{ $buku->id }}" class="block group openModalBtn text-left cursor-pointer">
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col group-hover:shadow-lg transition-shadow duration-300 h-full">
                                 
-                                <!-- Status -->
-                                <div class="mt-auto">
-                                    @if ($buku->jumlah_buku > 0)
-                                        <span class="text-xs font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                                            Tersedia
-                                        </span>
+                                <!-- Gambar Sampul -->
+                                <div class="aspect-[3/4] overflow-hidden">
+                                    @if($buku->cover_thumbnail_url)
+                                        <img src="{{ Storage::url($buku->cover_thumbnail_url) }}" alt="{{ $buku->nama_buku }}" class="w-full h-full object-cover">
                                     @else
-                                        <span class="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                                            Dipinjam
-                                        </span>
+                                        <img src="https://placehold.co/300x400/e2e8f0/cccccc?text=No+Cover" alt="No Cover" class="w-full h-full object-cover">
                                     @endif
                                 </div>
+                                
+                                <!-- Detail Teks -->
+                                <div class="p-4 flex flex-col flex-grow">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-1 truncate" title="{{ $buku->nama_buku }}">{{ $buku->nama_buku }}</h3>
+                                    <p class="text-sm text-gray-600 mb-2 truncate" title="{{ $buku->nama_penulis }}">{{ $buku->nama_penulis }}</p>
+                                    
+                                    <!-- Rating -->
+                                    <div class="flex items-center mb-3">
+                                        @php $rating = round($buku->rating_buku ?? 0); @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $rating)
+                                                <svg class="w-4 h-4 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.772 1.415-.772 1.736 0l1.83 4.401 4.853.704c.806.117 1.13.916.547 1.481l-3.51 3.42.83 4.83c.135.798-.703 1.403-1.416 1.004L10 15.17l-4.325 2.274c-.713.398-1.55-.206-1.416-1.004l.83-4.83-3.51-3.42c-.583-.565-.259-1.364.547-1.481l4.853-.704L9.132 2.884Z" clip-rule="evenodd" /></svg>
+                                            @else
+                                                <svg class="w-4 h-4 text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.772 1.415-.772 1.736 0l1.83 4.401 4.853.704c.806.117 1.13.916.547 1.481l-3.51 3.42.83 4.83c.135.798-.703 1.403-1.416 1.004L10 15.17l-4.325 2.274c-.713.398-1.55-.206-1.416-1.004l.83-4.83-3.51-3.42c-.583-.565-.259-1.364.547-1.481l4.853-.704L9.132 2.884Z" clip-rule="evenodd" /></svg>
+                                            @endif
+                                        @endfor
+                                        <span class="text-xs text-gray-500 ml-1.5">({{ $buku->rating_buku ?? 'N/A' }})</span>
+                                    </div>
+                                    
+                                    <!-- Status -->
+                                    <div class="mt-auto">
+                                        @if ($buku->jumlah_buku > 0)
+                                            <span class="text-xs font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Tersedia</span>
+                                        @else
+                                            <span class="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Dipinjam</span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
+                        </button>
+                        @empty
+                        <!-- Tampilan jika tidak ada buku (setelah difilter) -->
+                        <div class="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 text-center py-12">
+                            <h3 class="text-lg font-semibold text-gray-700">Tidak Ada Buku Ditemukan</h3>
+                            <p class="text-gray-500 mt-2">Coba ganti kata kunci pencarian atau filter Anda.</p>
                         </div>
-                    </button>
-                    @empty
-                    <!-- Tampilan jika tidak ada buku -->
-                    <div class="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 text-center py-12">
-                        <p class="text-gray-500">Belum ada buku di database. Silakan upload buku baru di halaman Admin.</p>
+                        @endforelse
+                        
                     </div>
-                    @endforelse
-                    
-                </div>
 
-                <!-- Paginasi (dari controller) -->
-                <div class="mt-10">
-                    <!-- Ini akan otomatis menampilkan link paginasi yang cantik -->
-                    {{ $bukus->links() }}
-                </div>
+                    <!-- Paginasi (dari controller) -->
+                    <div class="mt-10">
+                        <!-- Ini akan otomatis menampilkan link paginasi jika ada > 12 buku. -->
+                        {{ $bukus->links() }}
+                    </div>
 
-            </main>
-        </div>
+                </main>
+            </div>
+        </form> <!-- Penutup <form> filter -->
     </div>
 </div>
 
@@ -215,11 +235,10 @@
         </div>
 
         <!-- Body Modal -->
-        <div class="flex flex-col md:flex-row p-4 max-h-[calc(90vh-130px)] overflow-y-auto"> <!-- Kurangi tinggi untuk footer -->
+        <div class="flex flex-col md:flex-row p-4 max-h-[calc(90vh-130px)] overflow-y-auto">
 
             <!-- Kiri: Gambar -->
             <div class="w-full md:w-1/3 flex-shrink-0 p-2">
-                <!-- (REVISI) Border dan object-contain untuk gambar -->
                 <div class="aspect-[3/4] border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-100">
                     <img id="modal-cover" src="https://placehold.co/400x600/e2e8f0/cccccc?text=Loading..." alt="Cover Buku" class="w-full h-full object-contain">
                 </div>
@@ -227,39 +246,28 @@
 
             <!-- Kanan: Info -->
             <div class="w-full md:w-2/3 p-2 flex flex-col">
-                
                 <h2 id="modal-title" class="text-3xl font-bold text-gray-900 mb-2">Nama Buku Loading...</h2>
                 <p id="modal-author" class="text-lg text-gray-600 mb-3">Nama Penulis</p>
 
                 <!-- Rating & Status -->
                 <div class="flex items-center gap-4 mb-4">
-                    <!-- Rating -->
                     <div class="flex items-center">
-                        <div id="modal-rating-stars" class="flex items-center">
-                            <!-- Bintang diisi oleh JS -->
-                        </div>
+                        <div id="modal-rating-stars" class="flex items-center"></div>
                         <span id="modal-rating-text" class="text-sm text-gray-600 ml-2">(N/A)</span>
                     </div>
-                    <!-- Status -->
-                    <div id="modal-status-badge">
-                        <!-- Badge diisi oleh JS -->
-                    </div>
+                    <div id="modal-status-badge"></div>
                 </div>
 
                 <!-- Info Grid -->
                 <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-700 mb-4">
                     <span class="font-semibold text-gray-500">ISBN:</span>
                     <span id="modal-isbn" class="font-medium">...</span>
-                    
                     <span class="font-semibold text-gray-500">Penerbit:</span>
                     <span id="modal-penerbit" class="font-medium">...</span>
-
                     <span class="font-semibold text-gray-500">Tahun:</span>
                     <span id="modal-tahun" class="font-medium">...</span>
-
                     <span class="font-semibold text-gray-500">Halaman:</span>
                     <span id="modal-halaman" class="font-medium">...</span>
-                    
                     <span class="font-semibold text-gray-500">Kategori:</span>
                     <span id="modal-kategori" class="font-medium">...</span>
                 </div>
@@ -267,17 +275,13 @@
                 <!-- Deskripsi -->
                 <div class="mt-4 border-t pt-4">
                     <h4 class="font-semibold text-gray-800 mb-2">Deskripsi</h4>
-                    <p id="modal-deskripsi" class="text-gray-600 text-sm leading-relaxed">
-                        Deskripsi buku akan dimuat di sini...
-                    </p>
+                    <p id="modal-deskripsi" class="text-gray-600 text-sm leading-relaxed">...</p>
                 </div>
 
                 <!-- Tombol Pinjam (Footer Modal) -->
                 <div class="mt-auto pt-6">
                     <button id="openPinjamFormBtn" class="w-full bg-perpustakaan-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M15.5 4.125a.75.75 0 0 0-1.5 0V6a2 2 0 0 0-2-2h-5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2V6a.75.75 0 0 0-.5-.707ZM12 6h-5v10h5V6Z" clip-rule="evenodd" />
-                        </svg>
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M15.5 4.125a.75.75 0 0 0-1.5 0V6a2 2 0 0 0-2-2h-5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2V6a.75.75 0 0 0-.5-.707ZM12 6h-5v10h5V6Z" clip-rule="evenodd" /></svg>
                         Pinjam Buku Sekarang
                     </button>
                 </div>
@@ -316,7 +320,7 @@
                     <input type="text" id="pinjam-nama-buku" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100" value="Nama Buku..." readonly>
                 </div>
 
-                <!-- Durasi Peminjaman (REVISI: Input Angka) -->
+                <!-- Durasi Peminjaman (Input Angka) -->
                 <div>
                     <label for="pinjam-durasi" class="block text-sm font-medium text-gray-700 mb-1">Durasi Peminjaman (hari)</label>
                     <input type="number" name="durasi_peminjaman_hari" id="pinjam-durasi" min="1" max="30" value="14" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
@@ -359,14 +363,12 @@
 @endsection
 
 @push('scripts')
-<!-- =================================== -->
-<!-- JAVASCRIPT UNTUK MODAL (Sangat Penting) -->
-<!-- =================================== -->
+<!-- JAVASCRIPT UNTUK MODAL -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // === Variabel Global ===
         const storageBaseUrl = "{{ rtrim(Storage::url(''), '/') }}";
-        let currentBookData = null; // Menyimpan data buku yang sedang dilihat
+        let currentBookData = null; 
 
         // === Elemen Modal Detail ===
         const detailModal = document.getElementById('detailModal');
@@ -398,10 +400,9 @@
         const openDetailModal = async (bookId) => {
             if (!bookId) return;
 
-            // (PERBAIKAN) Menggunakan variabel 'detailModal', BUKAN 'modal'
             detailModal.classList.remove('hidden'); 
             document.body.classList.add('overflow-hidden');
-            resetDetailModalContent(); // Kosongkan konten lama
+            resetDetailModalContent(); 
 
             try {
                 const routeUrl = "{{ route('buku.detail', ['buku' => ':id']) }}".replace(':id', bookId);
@@ -411,8 +412,8 @@
                     throw new Error(`Gagal mengambil data buku: ${response.statusText}`);
                 }
                 const buku = await response.json();
-                currentBookData = buku; // Simpan data buku
-                populateDetailModal(buku); // Isi modal dengan data baru
+                currentBookData = buku; 
+                populateDetailModal(buku); 
 
             } catch (error) {
                 console.error(error);
@@ -495,7 +496,7 @@
 
         // === Fungsi untuk membuka Modal Pinjam ===
         const openPinjamModal = () => {
-            if (!currentBookData) return; // Jika tidak ada data, jangan lakukan apa-apa
+            if (!currentBookData) return; 
 
             // Isi form dengan data dari modal sebelumnya
             pinjamBukuIdInput.value = currentBookData.id;
@@ -507,14 +508,13 @@
             // Tutup modal detail, buka modal pinjam
             closeDetailModal();
             pinjamModal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden'); // Tetap kunci scroll
+            document.body.classList.add('overflow-hidden'); 
         };
 
         // === Fungsi untuk menutup Modal Pinjam ===
         const closePinjamModal = () => {
             pinjamModal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
-            // Kita tidak mengosongkan form, biarkan terisi jika user ingin buka lagi
         };
 
         // === Event Listeners ===
@@ -536,7 +536,7 @@
         // Tutup Modal Pinjam
         closePinjamModalBtn.addEventListener('click', closePinjamModal);
         cancelPinjamBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // Hentikan submit form
+            e.preventDefault(); 
             closePinjamModal();
         });
 

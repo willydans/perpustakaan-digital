@@ -39,7 +39,7 @@
             </div>
 
             <!-- Slide 3 -->
-            <div class="swiper-slide hero-slide" style="background-image: url('https://images.unsplash.com/photo-1531988042231-E0973cc4242e?q=80&w=2070&auto-format&fit=crop');">
+            <div class="swiper-slide hero-slide" style="background-image: url('https://media.istockphoto.com/id/171151211/id/foto/buku-buku-lama-di-perpustakaan.jpg?s=2048x2048&w=is&k=20&c=NodgVDSxAnhP2S4T7oqJgadSRZt0YUksmKMPid0XVxk=');">
                 <div class="hero-caption">
                     <div class="w-full lg:w-2/3 px-4">
                         <h1 class="text-4xl md:text-6xl font-bold mb-4">Baca di Mana Saja</h1>
@@ -90,7 +90,7 @@
                 </div>
                 <!-- Kolom Gambar -->
                 <div class="mt-8 md:mt-0">
-                    <img src="https://images.unsplash.com/photo-1541167760496-162885647545?q=80&w=2070&auto=format&fit=crop" alt="Tentang PerpusDigital" class="rounded-lg shadow-xl w-full h-auto object-cover">
+                    <img src="https://i.pinimg.com/1200x/d4/08/d8/d408d8f291dbd85577e86f92e489c3cd.jpg" alt="Tentang PerpusDigital" class="rounded-lg shadow-xl w-full h-auto object-cover">
                 </div>
             </div>
         </div>
