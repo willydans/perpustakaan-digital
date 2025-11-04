@@ -1,0 +1,36 @@
+body {
+    font-family: 'Inter', sans-serif;
+    /* Perbaikan untuk Navbar Fixed */
+    padding-top: 68px; /* Sesuaikan dengan tinggi navbar Anda */
+}
+
+/* Warna kustom dari desain Anda */
+.bg-perpustakaan-blue { background-color: #1A2E4E; }
+.bg-perpustakaan-yellow { background-color: #F7C325; }
+.text-perpustakaan-blue { color: #1A2E4E; }
+.text-perpustakaan-yellow { color: #F7C325; }
+
+/* Styling untuk Carousel Swiper */
+.hero-slide {
+    height: 500px;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+}
+/* Filter gelap agar teks carousel terbaca */
+.hero-slide::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+}
+/* Memperbaiki bug "teks ke atas" dengan flexbox */
+.hero-caption {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
