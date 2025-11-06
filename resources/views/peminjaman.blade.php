@@ -278,6 +278,14 @@
                     <p id="modal-deskripsi" class="text-gray-600 text-sm leading-relaxed">...</p>
                 </div>
 
+                <!-- Ulasan Peminjam -->
+                <div class="mt-4 border-t pt-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Ulasan Peminjam</h4>
+                    <div id="modal-reviews" class="space-y-3">
+                        <!-- Ulasan akan dimuat di sini -->
+                    </div>
+                </div>
+
                 <!-- Tombol Pinjam (Footer Modal) -->
                 <div class="mt-auto pt-6">
                     <button id="openPinjamFormBtn" class="w-full bg-perpustakaan-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center gap-2">
@@ -386,6 +394,7 @@
         const modalHalaman = document.getElementById('modal-halaman');
         const modalKategori = document.getElementById('modal-kategori');
         const modalDeskripsi = document.getElementById('modal-deskripsi');
+        const modalReviews = document.getElementById('modal-reviews');
         const openPinjamFormBtn = document.getElementById('openPinjamFormBtn');
 
         // === Elemen Modal Pinjam ===
@@ -406,14 +415,18 @@
 
             try {
                 const routeUrl = "{{ route('buku.detail', ['buku' => ':id']) }}".replace(':id', bookId);
-                const response = await fetch(routeUrl);
+                const response = await fetch(routeUrl, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
                 
                 if (!response.ok) {
                     throw new Error(`Gagal mengambil data buku: ${response.statusText}`);
                 }
-                const buku = await response.json();
-                currentBookData = buku; 
-                populateDetailModal(buku); 
+                const data = await response.json();
+                currentBookData = data.buku;
+                populateDetailModal(data.buku, data.reviews);
 
             } catch (error) {
                 console.error(error);
@@ -423,7 +436,7 @@
         };
 
         // === Fungsi untuk mengisi konten Modal Detail ===
-        const populateDetailModal = (buku) => {
+        const populateDetailModal = (buku, reviews = []) => {
             // URL cover
             if (buku.cover_thumbnail_url) {
                 modalCover.src = `${storageBaseUrl}/${buku.cover_thumbnail_url}`;
@@ -442,6 +455,22 @@
             modalHalaman.textContent = `${buku.jumlah_halaman} halaman`;
             modalKategori.textContent = buku.kategori ? buku.kategori.nama_kategori : 'Tidak ada kategori';
             modalDeskripsi.textContent = buku.deskripsi_buku;
+
+            // Ulasan Peminjam
+            modalReviews.innerHTML = '';
+            if (reviews && reviews.length > 0) {
+                reviews.forEach(review => {
+                    const reviewDiv = document.createElement('div');
+                    reviewDiv.className = 'bg-gray-50 p-3 rounded-lg';
+                    reviewDiv.innerHTML = `
+                        <p class="text-sm text-gray-700">${review.ulasan}</p>
+                        <p class="text-xs text-gray-500 mt-1">- ${review.user ? review.user.name : 'Anonim'}</p>
+                    `;
+                    modalReviews.appendChild(reviewDiv);
+                });
+            } else {
+                modalReviews.innerHTML = '<p class="text-sm text-gray-500">Belum ada ulasan.</p>';
+            }
 
             // Rating Bintang
             const rating = Math.round(buku.rating_buku || 0);

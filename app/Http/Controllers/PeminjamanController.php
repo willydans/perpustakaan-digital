@@ -74,15 +74,31 @@ class PeminjamanController extends Controller
     }
 
     /**
-     * Menampilkan data satu buku sebagai JSON untuk modal.
+     * Menampilkan halaman detail buku lengkap.
      */
-    public function show(Buku $buku)
+    public function show(Request $request, Buku $buku)
     {
         // Laravel otomatis akan mengambil data buku berdasarkan ID di URL.
         $buku->load('kategori'); // Ambil juga data relasi kategorinya
-        
-        // Kembalikan data sebagai JSON
-        return response()->json($buku);
+
+        // Ambil ulasan dari peminjam yang sudah mengembalikan buku
+        $reviews = Peminjaman::where('buku_id', $buku->id)
+            ->whereNotNull('ulasan')
+            ->whereNotNull('tanggal_pengembalian_aktual')
+            ->with('user:id,name')
+            ->latest()
+            ->get();
+
+        // Jika request AJAX (untuk modal), kembalikan JSON
+        if ($request->wantsJson()) {
+            return response()->json([
+                'buku' => $buku,
+                'reviews' => $reviews
+            ]);
+        }
+
+        // Kembalikan view dengan data buku dan ulasan
+        return view('peminjaman-detail', compact('buku', 'reviews'));
     }
 
     /**
@@ -139,5 +155,96 @@ class PeminjamanController extends Controller
             return back()->with('error_pinjam', 'Terjadi kesalahan. Gagal meminjam buku.');
         }
     }
+
+    /**
+     * Menampilkan riwayat peminjaman untuk user yang sedang login
+     */
+    public function riwayat()
+    {
+        // Ambil data peminjaman user dengan relasi buku, diurutkan dari yang terbaru
+        $peminjamans = Peminjaman::where('user_id', Auth::id())
+            ->with('buku')
+            ->latest()
+            ->get();
+
+        // Kirim data ke view
+        return view('riwayat', compact('peminjamans'));
+    }
+
+    /**
+     * Memperpanjang batas pengembalian buku berdasarkan input hari
+     */
+    public function perpanjang(Request $request, $id)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'hari_perpanjangan' => 'required|integer|min:1|max:30',
+        ]);
+
+        $peminjaman = Peminjaman::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+        // Cek apakah buku sudah dikembalikan
+        if ($peminjaman->tanggal_pengembalian_aktual) {
+            return back()->with('error', 'Buku sudah dikembalikan, tidak dapat diperpanjang.');
+        }
+
+        // Perpanjang batas kembali berdasarkan input
+        $hari = $validated['hari_perpanjangan'];
+        $peminjaman->batas_kembali = $peminjaman->batas_kembali->addDays($hari);
+        $peminjaman->save();
+
+        return back()->with('success', 'Batas pengembalian berhasil diperpanjang ' . $hari . ' hari.');
+    }
+
+    /**
+     * Mengembalikan buku
+     */
+    public function kembalikan($id)
+    {
+        $peminjaman = Peminjaman::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+        // Cek apakah buku sudah dikembalikan
+        if ($peminjaman->tanggal_pengembalian_aktual) {
+            return back()->with('error', 'Buku sudah dikembalikan.');
+        }
+
+        try {
+            // Set tanggal pengembalian aktual
+            $peminjaman->tanggal_pengembalian_aktual = Carbon::now();
+            $peminjaman->status = 'Dikembalikan';
+            $peminjaman->save();
+
+            // Tambah stok buku
+            $peminjaman->buku->increment('jumlah_buku');
+
+            return back()->with('success', 'Buku berhasil dikembalikan.');
+        } catch (\Exception $e) {
+            report($e);
+            return back()->with('error', 'Terjadi kesalahan saat mengembalikan buku.');
+        }
+    }
+
+    /**
+     * Menyimpan ulasan untuk peminjaman yang sudah dikembalikan
+     */
+    public function ulasan(Request $request, $id)
+    {
+        $request->validate([
+            'ulasan' => 'required|string|max:1000',
+        ]);
+
+        $peminjaman = Peminjaman::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+        // Pastikan buku sudah dikembalikan dulu
+        if (!$peminjaman->tanggal_pengembalian_aktual) {
+            return back()->with('error', 'Anda hanya dapat memberi ulasan setelah mengembalikan buku.');
+        }
+
+        $peminjaman->ulasan = $request->ulasan;
+        $peminjaman->save();
+
+        return back()->with('success', 'Terima kasih atas ulasannya!');
+    }
+
 }
 
