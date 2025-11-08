@@ -4,36 +4,9 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-12">
-    <h1 class="text-4xl font-bold text-gray-800 mb-8">Admin: Manajemen Buku</h1>
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Manajemen Buku</h1>
 
-    <!-- =================================== -->
-    <!-- (1) FORM TAMBAH KATEGORI (TERPISAH) -->
-    <!-- =================================== -->
-    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Manajemen Kategori (Tester)</h2>
 
-        <!-- Pesan Sukses Tambah Kategori -->
-        @if (session('success_kategori'))
-            <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-6" role="alert">
-                <span class="block sm:inline">{{ session('success_kategori') }}</span>
-            </div>
-        @endif
-
-        <!-- Form "Quick Add" Kategori (SEKARANG DI LUAR) -->
-        <form action="{{ route('admin.kategori.store') }}" method="POST" class="flex items-center gap-2 max-w-lg">
-            @csrf
-            <div class="flex-grow">
-                <label for="nama_kategori_baru" class="sr-only">Nama Kategori Baru</label>
-                <input type="text" name="nama_kategori" id="nama_kategori_baru" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Ketik nama kategori baru..." required>
-                @error('nama_kategori') 
-                    <span class="text-red-500 text-sm">{{ $message }}</span> 
-                @enderror
-            </div>
-            <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                Tambah Kategori
-            </button>
-        </form>
-    </div>
 
 
     <!-- =================================== -->

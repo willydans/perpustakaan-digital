@@ -184,9 +184,12 @@
     ======================== -->
     <div class="mt-12 bg-white p-6 rounded-lg shadow-lg">
         <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a href="{{ route('admin.buku.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300">
                 Kelola Buku
+            </a>
+            <a href="{{ route('admin.kategori.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300">
+                Kelola Kategori
             </a>
             <a href="#" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300">
                 Kelola User

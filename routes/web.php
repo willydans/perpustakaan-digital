@@ -76,8 +76,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
         Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy');
 
-        // Rute untuk 'quick add' Kategori
+        // Rute Manajemen Kategori
+        Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
         Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
+        Route::get('/kategori/{kategori}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
+        Route::put('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
+        Route::delete('/kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
         Route::post('/peminjaman/{id}/ulasan', [PeminjamanController::class, 'ulasan'])->name('peminjaman.ulasan')->middleware('auth');
 

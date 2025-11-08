@@ -24,8 +24,8 @@ NAVBAR (Versi Tailwind)
             @if(Auth::check() && Auth::user()->role === 'admin')
                 <!-- Navbar Khusus Admin -->
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ route('admin.dashboard') }}" class="hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
                     <a href="{{ route('admin.buku.index') }}" class="hover:text-perpustakaan-yellow transition duration-300">Buku</a>
+                    <a href="{{ route('admin.kategori.index') }}" class="hover:text-perpustakaan-yellow transition duration-300">Kategori</a>
                     <a href="#" class="hover:text-perpustakaan-yellow transition duration-300">User</a>
                 </div>
             @else
@@ -84,8 +84,8 @@ NAVBAR (Versi Tailwind)
         <div class="container mx-auto px-4 pt-2 pb-4 space-y-3">
             @if(Auth::check() && Auth::user()->role === 'admin')
                 <!-- Menu Mobile Admin -->
-                <a href="{{ route('admin.dashboard') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
                 <a href="{{ route('admin.buku.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Buku</a>
+                <a href="{{ route('admin.kategori.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Kategori</a>
                 <a href="#" class="block hover:text-perpustakaan-yellow transition duration-300">User</a>
             @else
                 <!-- Menu Mobile User -->
