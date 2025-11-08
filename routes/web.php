@@ -74,6 +74,8 @@ Route::middleware('auth')->group(function () {
         // Rute Manajemen Buku
         Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
         Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
+        Route::get('/buku/{buku}/edit', [BukuController::class, 'edit'])->name('buku.edit');
+        Route::put('/buku/{buku}', [BukuController::class, 'update'])->name('buku.update');
         Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy');
 
         // Rute Manajemen Kategori

@@ -150,6 +150,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cover</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Buku</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penulis</th>
@@ -161,6 +162,9 @@
                     
                     @forelse ($bukus as $buku)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $bukus->firstItem() + $loop->index }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($buku->cover_thumbnail_url)
                                 <img src="{{ Storage::url($buku->cover_thumbnail_url) }}" alt="{{ $buku->nama_buku }}" class="w-16 h-20 object-cover rounded">
@@ -178,8 +182,9 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $buku->jumlah_buku }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <form action="{{ route('admin.buku.destroy', $buku->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?');">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                            <a href="{{ route('admin.buku.edit', $buku) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                            <form action="{{ route('admin.buku.destroy', $buku->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?');" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
@@ -188,16 +193,22 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                        <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
                             Belum ada buku yang di-upload.
                         </td>
                     </tr>
-                    {{-- INI ADALAH PERBAIKANNYA --}}
                     @endforelse
 
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        @if ($bukus->hasPages())
+            <div class="mt-6">
+                {{ $bukus->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection

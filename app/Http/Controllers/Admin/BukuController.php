@@ -16,13 +16,13 @@ class BukuController extends Controller
      */
     public function index()
     {
-        // Ambil semua data buku dari database
+        // Ambil semua data buku dari database dengan pagination
         // Kita pakai 'latest()' agar buku yang baru di-upload ada di atas
-        $bukus = Buku::with('kategori')->latest()->get(); 
-        
+        $bukus = Buku::with('kategori')->latest()->paginate(10);
+
         // Ambil juga semua data kategori (untuk <select> dropdown)
         $kategoris = Kategori::orderBy('nama_kategori')->get();
-        
+
         // Tampilkan view dan kirim data $bukus DAN $kategoris ke dalamnya
         return view('admin.buku', [
             'bukus' => $bukus,
@@ -79,6 +79,72 @@ class BukuController extends Controller
 
         // 5. Kembali ke halaman sebelumnya dengan pesan sukses
         return back()->with('success', 'Buku berhasil di-upload!');
+    }
+
+    /**
+     * Menampilkan form edit buku.
+     */
+    public function edit(Buku $buku)
+    {
+        // Ambil semua data kategori untuk dropdown
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
+
+        return view('admin.buku.edit', compact('buku', 'kategoris'));
+    }
+
+    /**
+     * Update data buku.
+     */
+    public function update(Request $request, Buku $buku)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            // Kolom Kiri
+            'nama_buku' => 'required|string|max:255',
+            'nama_penulis' => 'required|string|max:255',
+            'nomor_isbn' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('data_buku', 'nomor_isbn')->ignore($buku->id)
+            ],
+            'penerbit' => 'required|string|max:255',
+
+            // Kolom Kanan
+            'kategori_id' => [
+                'required',
+                'integer',
+                Rule::exists('kategori', 'id')
+            ],
+            'tahun_buku' => 'required|integer|min:1800|max:' . (date('Y') + 1),
+            'jumlah_halaman' => 'required|integer|min:1',
+            'jumlah_buku' => 'required|integer|min:0',
+            'rating_buku' => 'nullable|numeric|min:0|max:5',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', // Opsional saat edit
+
+            // Kolom Bawah
+            'deskripsi_buku' => 'required|string|min:10',
+        ]);
+
+        // Jika ada file cover baru, upload dan ganti yang lama
+        if ($request->hasFile('cover')) {
+            // Hapus cover lama jika ada
+            if ($buku->cover_thumbnail_url) {
+                Storage::disk('public')->delete($buku->cover_thumbnail_url);
+            }
+
+            // Upload cover baru
+            $path = $request->file('cover')->store('covers', 'public');
+            $validatedData['cover_thumbnail_url'] = $path;
+        }
+
+        // Hapus 'cover' dari array jika ada
+        unset($validatedData['cover']);
+
+        // Update data buku
+        $buku->update($validatedData);
+
+        return redirect()->route('admin.buku.index')->with('success', 'Buku berhasil diperbarui!');
     }
 
     /**
