@@ -63,6 +63,11 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+    // Rute untuk Dashboard Admin
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+
     // === RUTE ADMIN ===
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 

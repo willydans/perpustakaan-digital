@@ -6,17 +6,36 @@ NAVBAR (Versi Tailwind)
         <div class="flex justify-between items-center h-17 py-3">
             
             <!-- Logo -->
-            <a class="flex items-center space-x-2" href="/">
-                <img src="https://i.ibb.co/mRwnSGC/logo-demo.png" alt="PerpusDigital" class="h-8 w-8">
-                <span class="font-bold text-xl">PerpusDigital</span>
-            </a>
+            @if(Auth::check() && Auth::user()->role === 'admin')
+                <a class="flex items-center space-x-2" href="{{ route('admin.dashboard') }}">
+                    <img src="https://i.ibb.co/mRwnSGC/logo-demo.png" alt="PerpusDigital" class="h-8 w-8">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-xl">PerpusDigital</span>
+                        <span class="text-xs text-perpustakaan-yellow">Admin Panel</span>
+                    </div>
+                </a>
+            @else
+                <a class="flex items-center space-x-2" href="/">
+                    <img src="https://i.ibb.co/mRwnSGC/logo-demo.png" alt="PerpusDigital" class="h-8 w-8">
+                    <span class="font-bold text-xl">PerpusDigital</span>
+                </a>
+            @endif
             
-            <!-- Link Navigasi Kiri (Desktop) -->
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="{{ route('dashboard') }}" class="hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
-                <a href="{{ route('peminjaman') }}" class="hover:text-perpustakaan-yellow transition duration-300">Peminjaman Buku</a>
-                <a href="{{ route('riwayat') }}" class="hover:text-perpustakaan-yellow transition duration-300">Riwayat Peminjaman</a>
-            </div>
+            @if(Auth::check() && Auth::user()->role === 'admin')
+                <!-- Navbar Khusus Admin -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{{ route('admin.dashboard') }}" class="hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
+                    <a href="{{ route('admin.buku.index') }}" class="hover:text-perpustakaan-yellow transition duration-300">Buku</a>
+                    <a href="#" class="hover:text-perpustakaan-yellow transition duration-300">User</a>
+                </div>
+            @else
+                <!-- Navbar User Biasa -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{{ route('dashboard') }}" class="hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
+                    <a href="{{ route('peminjaman') }}" class="hover:text-perpustakaan-yellow transition duration-300">Peminjaman Buku</a>
+                    <a href="{{ route('riwayat') }}" class="hover:text-perpustakaan-yellow transition duration-300">Riwayat Peminjaman</a>
+                </div>
+            @endif
             
             <!-- Tombol Autentikasi Kanan (Desktop) -->
             <div class="hidden md:flex items-center space-x-4">
@@ -63,11 +82,16 @@ NAVBAR (Versi Tailwind)
             <!-- Menu Mobile (Dropdown) -->
             <div id="mobile-menu" class="hidden md:hidden bg-perpustakaan-blue/90 backdrop-blur-sm">
         <div class="container mx-auto px-4 pt-2 pb-4 space-y-3">
-            <a href="{{ route('dashboard') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
-            <a href="{{ route('peminjaman') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Peminjaman Buku</a>
-            <a href="{{ route('riwayat') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Riwayat Peminjaman</a>
             @if(Auth::check() && Auth::user()->role === 'admin')
-                <a href="{{ route('admin.buku.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Admin Panel</a>
+                <!-- Menu Mobile Admin -->
+                <a href="{{ route('admin.dashboard') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
+                <a href="{{ route('admin.buku.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Buku</a>
+                <a href="#" class="block hover:text-perpustakaan-yellow transition duration-300">User</a>
+            @else
+                <!-- Menu Mobile User -->
+                <a href="{{ route('dashboard') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
+                <a href="{{ route('peminjaman') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Peminjaman Buku</a>
+                <a href="{{ route('riwayat') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Riwayat Peminjaman</a>
             @endif
             <hr class="border-gray-600">
             @guest
