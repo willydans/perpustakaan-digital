@@ -60,12 +60,15 @@ NAVBAR (Versi Tailwind)
         </div>
     </div>
     
-    <!-- Menu Mobile (Dropdown) -->
-    <div id="mobile-menu" class="hidden md:hidden bg-perpustakaan-blue/90 backdrop-blur-sm">
+            <!-- Menu Mobile (Dropdown) -->
+            <div id="mobile-menu" class="hidden md:hidden bg-perpustakaan-blue/90 backdrop-blur-sm">
         <div class="container mx-auto px-4 pt-2 pb-4 space-y-3">
             <a href="{{ route('dashboard') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
             <a href="{{ route('peminjaman') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Peminjaman Buku</a>
             <a href="{{ route('riwayat') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Riwayat Peminjaman</a>
+            @if(Auth::check() && Auth::user()->role === 'admin')
+                <a href="{{ route('admin.buku.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Admin Panel</a>
+            @endif
             <hr class="border-gray-600">
             @guest
                 <a href="{{ route('login') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Masuk</a>

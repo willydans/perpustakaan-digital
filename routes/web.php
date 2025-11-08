@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // === RUTE ADMIN ===
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
         // Rute Manajemen Buku
         Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
