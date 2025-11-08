@@ -26,7 +26,7 @@
                 <div class="w-full md:w-1/3 flex-shrink-0">
                     <div class="aspect-[3/4] overflow-hidden rounded-lg shadow-md">
                         @if($buku->cover_thumbnail_url)
-                            <img src="{{ Storage::url($buku->cover_thumbnail_url) }}" alt="{{ $buku->nama_buku }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $buku->cover_thumbnail_url) }}" alt="{{ $buku->nama_buku }}" class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <span class="text-gray-500 text-lg">No Cover</span>

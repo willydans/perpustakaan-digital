@@ -78,14 +78,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/buku/{buku}/edit', [BukuController::class, 'edit'])->name('buku.edit');
         Route::put('/buku/{buku}', [BukuController::class, 'update'])->name('buku.update');
         Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy');
-
+       
         // Rute Manajemen Kategori
         Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
         Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
         Route::get('/kategori/{kategori}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
         Route::put('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
         Route::delete('/kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
-
+        
         // Rute Manajemen User
         Route::get('/user', [UserController::class, 'index'])->name('user.index');
         Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
