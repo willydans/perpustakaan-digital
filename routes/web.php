@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 // (1) Impor KETIGA controller
 use App\Http\Controllers\Admin\BukuController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\PeminjamanController; // <-- Ini penting
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -84,6 +85,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/kategori/{kategori}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
         Route::put('/kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
         Route::delete('/kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+
+        // Rute Manajemen User
+        Route::get('/user', [UserController::class, 'index'])->name('user.index');
+        Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+        Route::post('/user', [UserController::class, 'store'])->name('user.store');
+        Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
+        Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
         Route::post('/peminjaman/{id}/ulasan', [PeminjamanController::class, 'ulasan'])->name('peminjaman.ulasan')->middleware('auth');
 

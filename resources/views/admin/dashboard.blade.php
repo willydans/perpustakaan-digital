@@ -191,7 +191,7 @@
             <a href="{{ route('admin.kategori.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300">
                 Kelola Kategori
             </a>
-            <a href="#" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300">
+            <a href="{{ route('admin.user.index') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300">
                 Kelola User
             </a>
         </div>

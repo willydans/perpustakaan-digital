@@ -26,7 +26,7 @@ NAVBAR (Versi Tailwind)
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="{{ route('admin.buku.index') }}" class="hover:text-perpustakaan-yellow transition duration-300">Buku</a>
                     <a href="{{ route('admin.kategori.index') }}" class="hover:text-perpustakaan-yellow transition duration-300">Kategori</a>
-                    <a href="#" class="hover:text-perpustakaan-yellow transition duration-300">User</a>
+                    <a href="{{ route('admin.user.index') }}" class="hover:text-perpustakaan-yellow transition duration-300">User</a>
                 </div>
             @else
                 <!-- Navbar User Biasa -->
@@ -86,7 +86,7 @@ NAVBAR (Versi Tailwind)
                 <!-- Menu Mobile Admin -->
                 <a href="{{ route('admin.buku.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Buku</a>
                 <a href="{{ route('admin.kategori.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Kategori</a>
-                <a href="#" class="block hover:text-perpustakaan-yellow transition duration-300">User</a>
+                <a href="{{ route('admin.user.index') }}" class="block hover:text-perpustakaan-yellow transition duration-300">User</a>
             @else
                 <!-- Menu Mobile User -->
                 <a href="{{ route('dashboard') }}" class="block hover:text-perpustakaan-yellow transition duration-300">Dashboard</a>
