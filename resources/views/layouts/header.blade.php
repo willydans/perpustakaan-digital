@@ -8,7 +8,7 @@ NAVBAR (Versi Tailwind)
             <!-- Logo -->
             @if(Auth::check() && Auth::user()->role === 'admin')
                 <a class="flex items-center space-x-2" href="{{ route('admin.dashboard') }}">
-                    <img src="https://i.ibb.co/mRwnSGC/logo-demo.png" alt="PerpusDigital" class="h-8 w-8">
+                    <img src="{{ asset('storage/logo.jpg') }}" alt="Logo Demo" class="h-8 w-8">
                     <div class="flex flex-col">
                         <span class="font-bold text-xl">PerpusDigital</span>
                         <span class="text-xs text-perpustakaan-yellow">Admin Panel</span>

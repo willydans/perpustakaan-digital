@@ -7,7 +7,7 @@ FOOTER
             <!-- Kolom 1: About -->
             <div>
                 <div class="flex items-center space-x-2 mb-4">
-                    <img src="https://i.ibb.co/mRwnSGC/logo-demo.png" alt="PerpusDigital" class="h-8 w-8">
+                    <img src="{{ asset('storage/logo.jpg') }}" alt="Logo Demo" class="h-8 w-8">
                     <span class="font-bold text-xl text-white">PerpusDigital</span>
                 </div>
                 <p class="pr-3 text-gray-400">Platform perpustakaan digital terdepan yang berfokus pada kualitas dan kemudahan akses buku berkualitas.</p>
